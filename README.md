@@ -57,9 +57,42 @@ Did you forget to run "composer require symfony/asset"? Unknown function "asset"
 ```
  composer require symfony/asset
 ```
+
+### Webpack-encore installation
+```
+$  composer require symfony/webpack-encore-bundle
+
+
+$ yarn install
+                                                                                                                                             12:13:07
+```
 ### Database config and creation
 
 ---
+### Installation (orm)
+
+
+$ bin/console make:entity
+
+
+ [ERROR] Missing package: to use the make:entity command, run:
+
+         composer require orm
+
+```
+$  composer require orm
+```
+
+
+Some files have been created and/or updated to configure your new packages.
+Please review, edit and commit them: these files are yours.
+
+ doctrine/doctrine-bundle  instructions:
+
+  * Modify your DATABASE_URL config in .env
+
+  * Configure the driver (postgresql) and
+    server_version (13) in config/packages/doctrine.yaml
 
 #### configuration
 Config consists to uncomment a mysql database and provide username, password and DB name! (.env file)
@@ -101,14 +134,17 @@ pdo_pgsql
 pdo_sqlite
 ```
 
-### Making entity Task
+### Making entities Category and Video
 ```
 $ bin/console make:entity
 
- Class name of the entity to create or update (e.g. GentlePopsicle):
- > Task
+]$ bin/console make:entity Video
 
- Your entity already exists! So let's add some new fields!
+ created: src/Entity/Video.php
+ created: src/Repository/VideoRepository.php
+
+ Entity generated! Now let's add some fields!
+ You can always add more fields later manually or by re-running this command.
 
  New property name (press <return> to stop adding fields):
  > title
@@ -122,50 +158,128 @@ $ bin/console make:entity
  Can this field be null in the database (nullable) (yes/no) [no]:
  >
 
- updated: src/Entity/Task.php
+ updated: src/Entity/Video.php
 
  Add another property? Enter the property name (or press <return> to stop adding fields):
- > status
+ > path
 
  Field type (enter ? to see all types) [string]:
- > boolean
+ >
+
+ Field length [255]:
+ >
 
  Can this field be null in the database (nullable) (yes/no) [no]:
- > yes
+ >
 
- updated: src/Entity/Task.php
+ updated: src/Entity/Video.php
+
+ Add another property? Enter the property name (or press <return> to stop adding fields):
+ > category
+
+ Field type (enter ? to see all types) [string]:
+ > relation
+
+ What class should this entity be related to?:
+ > Category
+
+What type of relationship is this?
+ ------------ ---------------------------------------------------------------------
+  Type         Description
+ ------------ ---------------------------------------------------------------------
+  ManyToOne    Each Video relates to (has) one Category.
+               Each Category can relate to (can have) many Video objects
+
+  OneToMany    Each Video can relate to (can have) many Category objects.
+               Each Category relates to (has) one Video
+
+  ManyToMany   Each Video can relate to (can have) many Category objects.
+               Each Category can also relate to (can also have) many Video objects
+
+  OneToOne     Each Video relates to (has) exactly one Category.
+               Each Category also relates to (has) exactly one Video.
+ ------------ ---------------------------------------------------------------------
+
+ Relation type? [ManyToOne, OneToMany, ManyToMany, OneToOne]:
+ > ManyToOne
+
+ Is the Video.category property allowed to be null (nullable)? (yes/no) [yes]:
+ >
+
+ Do you want to add a new property to Category so that you can access/update Video objects from it - e.g. $category->getVideos()? (yes/no) [yes]:
+ >
+
+ A new property will also be added to the Category class so that you can access the related Video objects from it.
+
+ New field name inside Category [videos]:
+ >
+
+ updated: src/Entity/Video.php
+ updated: src/Entity/Category.php
 
  Add another property? Enter the property name (or press <return> to stop adding fields):
  >
 
-```
-```
-Note:
-we faced this error while make this project:
-"Class Doctrine\Persistence\Mapping\Driver\Annotation Driver does not exist"
-We deal with it by deleting inflector it's deprecated! then deleted composer.lock
-we run: composer install, everything worked fine!
-this tweak resolved also this error:
-[Symfony\Component\Console\Exception\LogicException] An option named "connection" already exists.
-```
+
+
+  Success!
+
+
+ Next: When you're ready, create a migration with php bin/console make:migration
+
+
 
 ### Making migrations
+[anaruz@localhost netprogs.pl]$ bin/console make:migration
 
----
-```
-$ bin/console make:migration
 
-```
-### Creating Database Table using migration file
 
----
-```
-$ bin/console doctrine:migrations:migrate
+  Success!
 
- WARNING! You are about to execute a migration in database "todo" that could result in schema changes and data loss. Are you sure you wish to continue? (yes/no) [yes]:
+
+ Next: Review the new migration "migrations/Version20210911131232.php"
+ Then: Run the migration with php bin/console doctrine:migrations:migrate
+ See https://symfony.com/doc/current/bundles/DoctrineMigrationsBundle/index.html
+[anaruz@localhost netprogs.pl]$ bin/console doctrine:migration:migrate
+
+ WARNING! You are about to execute a migration in database "netprogs.pl" that could result in schema changes and data loss. Are you sure you wish to continue? (yes/no) [yes]:
  >
-```
 
+[notice] Migrating up to DoctrineMigrations\Version20210911131232
+[notice] finished in 89.8ms, used 6M memory, 1 migrations executed, 10 sql queries
+
+
+```
+### Data (Fixtures)
+
+[anaruz@localhost netprogs.pl]$ bin/console make:fixtures
+
+
+ [ERROR] Missing package: to use the make:fixtures command, run:
+
+         composer require orm-fixtures --dev
+
+
+[anaruz@localhost netprogs.pl]$      composer require orm-fixtures --dev
+
+
+Some files have been created and/or updated to configure your new packages.
+Please review, edit and commit them: these files are yours.
+
+[anaruz@localhost netprogs.pl]$ bin/console make:fixtures
+
+ The class name of the fixtures to create (e.g. AppFixtures):
+ > CategoryFixtures
+
+ created: src/DataFixtures/CategoryFixtures.php
+
+
+  Success!
+
+
+ Next: Open your new fixtures class and start customizing it.
+ Load your fixtures by running: php bin/console doctrine:fixtures:load
+ Docs: https://symfony.com/doc/current/bundles/DoctrineFixturesBundle/index.html
 ### More updates to website!
 ConrollerToDoListController
 ::create method updated with necessary code persist tasks!
@@ -175,3 +289,33 @@ in delete method parameter converter is used, to allow this, install
 ```
 $ composer require sensio/framework-extra-bundle
 ```
+
+
+### debug tools!
+composer require profiler --dev
+composer require symfony/debug-bundle --dev
+
+
+### Form
+
+$ bin/console make:form
+
+
+ [ERROR] Missing packages: to use the make:form command, run:
+
+         composer require form validator
+
+
+$   composer require form validator
+
+
+
+Some files have been created and/or updated to configure your new packages.
+Please review, edit and commit them: these files are yours.
+$ bin/console make:form
+
+ The name of the form class (e.g. GrumpyKangarooType):
+ > CategoryType
+
+ The name of Entity or fully qualified model class name that the new form will be bound to (empty for none):
+ > Category

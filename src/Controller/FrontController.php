@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
+use App\Utils\CategoryTreeFrontPage;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,11 +19,13 @@ class FrontController extends AbstractController
     }
 
     /**
-     * @Route("/video-list", name="video_list")
+     * @Route("/video-list/category/{category},{id}", name="video_list")
      */
-    public function videoList(): Response
+    public function videoList($id, CategoryTreeFrontPage $categories): Response
     {
-        return $this->render('front/video_list.html.twig');
+        $categories->getCategoryListAndParent($id);
+
+        return $this->render('front/video_list.html.twig', ['subcategories' => $categories]);
     }
 
     /**
@@ -70,5 +74,14 @@ class FrontController extends AbstractController
     public function payment(): Response
     {
         return $this->render('front/payment.html.twig');
+    }
+
+    public function mainCategories()
+    {
+        $categories = $manager = $this->getDoctrine()
+                                     ->getRepository(Category::class)
+                                     ->findBy(['parent' => null], ['name' => 'ASC']);
+
+        return  $this->render('front/_main_categories.html.twig', ['categories' => $categories]);
     }
 }

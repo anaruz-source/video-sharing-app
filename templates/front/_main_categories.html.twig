@@ -1,0 +1,5 @@
+{% for c in categories %}
+<a class="p-2 text-dark" href="{{path('video_list',{'category':c.name|lower|slugify, 'id':c.id})}}">{{c.name}}</a>
+{% endfor %}
+
+<a class="p-2 text-dark" href="{{path('admin')}}">My account</a>

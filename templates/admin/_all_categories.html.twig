@@ -1,0 +1,24 @@
+<select name="category[parent]" class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+
+  <option
+  {% if edited.parent is defined  and edited.parent == null%}
+
+  {{'selected'}}
+
+
+  {% endif %}
+
+   value="0">Null</option>
+
+  {% for category in categories %}
+
+  <option
+
+  {% if edited.parent.id is defined and edited.parent.id == category.id %}
+
+  {{'selected'}}
+  {% endif %}
+
+  value="{{category.id}}">{{category.name}}</option>
+  {% endfor %}
+</select>
